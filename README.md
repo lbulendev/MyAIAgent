@@ -15,9 +15,13 @@ every agentic mechanic implemented natively on the client.
 - **Low-latency streaming** — assistant replies stream token by token into
   the transcript over Server-Sent Events
 - **Client-side tool orchestration** — the model calls `lookup_customer`,
-  `book_appointment`, and `mark_lead_handled`; the app executes them
-  against a mock CRM and feeds results back in a multi-step loop until the
-  turn completes
+  `book_appointment`, `send_payment_link`, and `mark_lead_handled`; the
+  app executes them against a mock CRM and feeds results back in a
+  multi-step loop until the turn completes
+- **Conversations into revenue** — after booking, the agent collects a
+  deposit through a simulated text-to-pay link (guardrailed: the prompt
+  and tool description forbid asking for card details in chat; nothing
+  real is charged)
 - **Agentic state management** — an explicit state machine
   (`idle → thinking → streaming → executingTool → …`) drives the UI, so
   the user always sees what the worker is doing
@@ -28,8 +32,8 @@ every agentic mechanic implemented natively on the client.
   with a red banner and Retry; raw error text never reaches the screen
 - **Testability by design** — a `ModelProvider` seam at the network
   boundary means the whole agent loop is unit-tested with a scripted fake,
-  tagged `smoke` / `sanity` / `regression`, no network required — 27 tests
-  on iOS (Swift Testing), 26 on Android (JUnit 5), mirrored test-for-test
+  tagged `smoke` / `sanity` / `regression`, no network required — 30 tests
+  on iOS (Swift Testing), 29 on Android (JUnit 5), mirrored test-for-test
 - **Dual-native discipline** — the same feature shipped twice, natively:
   shared wire format, shared snapshot format, shared localization keyspace,
   and a pinned regression suite on each side for the platform-specific
