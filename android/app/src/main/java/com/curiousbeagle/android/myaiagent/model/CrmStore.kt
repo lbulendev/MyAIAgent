@@ -27,6 +27,19 @@ class CrmStore(initialLeads: List<Lead> = Lead.samples) {
         val day: String,
     )
 
+    /**
+     * A simulated text-to-pay link (the Podium-style "conversations into
+     * revenue" step). Nothing real is charged — the demo stops at "sent".
+     */
+    data class PaymentLink(
+        val id: String,
+        val customerName: String,
+        val amountUsd: Int,
+        val memo: String,
+    ) {
+        val url: String get() = "https://pay.beaglebike.shop/$id"
+    }
+
     val customers = listOf(
         Customer("Dana Reyes", "555-0117", "Trek FX 3", "March 2026"),
         Customer("Priya Natarajan", "555-0198", "Specialized Sirrus", "June 2026"),
@@ -38,7 +51,11 @@ class CrmStore(initialLeads: List<Lead> = Lead.samples) {
     private val _appointments = MutableStateFlow<List<Appointment>>(emptyList())
     val appointments: StateFlow<List<Appointment>> = _appointments.asStateFlow()
 
+    private val _paymentLinks = MutableStateFlow<List<PaymentLink>>(emptyList())
+    val paymentLinks: StateFlow<List<PaymentLink>> = _paymentLinks.asStateFlow()
+
     private var nextAppointmentNumber = 1042
+    private var nextPaymentLinkNumber = 5001
 
     fun lead(id: String): Lead? = _leads.value.firstOrNull { it.id == id }
 
@@ -52,6 +69,13 @@ class CrmStore(initialLeads: List<Lead> = Lead.samples) {
         val appointment = Appointment("A-${nextAppointmentNumber++}", customerName, service, day)
         _appointments.update { it + appointment }
         return appointment
+    }
+
+    /** Creates a simulated payment link the agent can "text" the customer. */
+    fun sendPaymentLink(customerName: String, amountUsd: Int, memo: String): PaymentLink {
+        val link = PaymentLink("PL-${nextPaymentLinkNumber++}", customerName, amountUsd, memo)
+        _paymentLinks.update { it + link }
+        return link
     }
 
     fun markLeadHandled(id: String) = updateLead(id) { it.copy(status = Lead.Status.HANDLED) }

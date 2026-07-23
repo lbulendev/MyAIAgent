@@ -69,13 +69,18 @@ class AgentEngine(
         kickoff()
     }
 
-    /** Sends a follow-up message (spoken as the customer). */
-    fun send(text: String) {
+    /**
+     * Sends a follow-up message (spoken as the customer). Returns whether
+     * the message was accepted — a send while a run is in flight is
+     * refused, and the caller must keep the draft rather than dropping it.
+     */
+    fun send(text: String): Boolean {
         val trimmed = text.trim()
-        if (trimmed.isEmpty() || runJob?.isActive == true) return
+        if (trimmed.isEmpty() || runJob?.isActive == true) return false
         appendMessage(ChatMessage(kind = ChatMessage.Kind.CUSTOMER, text = trimmed))
         conversation += WireMessage.user(trimmed)
         kickoff()
+        return true
     }
 
     /** Replays a conversation that was interrupted mid-run. */
@@ -219,6 +224,7 @@ class AgentEngine(
             - Reply to the customer in one to three friendly, concise sentences.
             - Use lookup_customer before booking so you know if they are an existing customer.
             - Only book after the customer has named a service and a day; otherwise ask.
+            - After booking a service appointment, use send_payment_link to collect the shop's standard $20 deposit, and tell the customer the link is on its way. Never ask for card details in chat.
             - The shop is open Tuesday through Saturday, 9am to 6pm.
             - When the request is fully resolved, call mark_lead_handled with a one-sentence summary.
 

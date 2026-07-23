@@ -27,11 +27,23 @@ final class CRMStore {
         var day: String
     }
 
+    /// A simulated text-to-pay link (the Podium-style "conversations into
+    /// revenue" step). Nothing real is charged — the demo stops at "sent".
+    nonisolated struct PaymentLink: Identifiable, Equatable {
+        let id: String
+        var customerName: String
+        var amountUSD: Int
+        var memo: String
+        var url: String { "https://pay.beaglebike.shop/\(id)" }
+    }
+
     private(set) var customers: [Customer]
     private(set) var appointments: [Appointment] = []
+    private(set) var paymentLinks: [PaymentLink] = []
     var leads: [Lead]
 
     private var nextAppointmentNumber = 1042
+    private var nextPaymentLinkNumber = 5001
 
     init(leads: [Lead] = Lead.samples) {
         self.leads = leads
@@ -59,6 +71,19 @@ final class CRMStore {
         nextAppointmentNumber += 1
         appointments.append(appointment)
         return appointment
+    }
+
+    /// Creates a simulated payment link the agent can "text" the customer.
+    func sendPaymentLink(customerName: String, amountUSD: Int, memo: String) -> PaymentLink {
+        let link = PaymentLink(
+            id: "PL-\(nextPaymentLinkNumber)",
+            customerName: customerName,
+            amountUSD: amountUSD,
+            memo: memo
+        )
+        nextPaymentLinkNumber += 1
+        paymentLinks.append(link)
+        return link
     }
 
     /// Marks a lead handled so it drops out of the active queue.

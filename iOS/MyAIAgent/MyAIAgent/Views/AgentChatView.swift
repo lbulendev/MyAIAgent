@@ -91,8 +91,11 @@ struct AgentChatView: View {
     }
 
     private func sendDraft() {
-        engine.send(draft)
-        draft = ""
+        // Clear the draft only if the engine accepted it — a keyboard-return
+        // send while the agent is running must not silently drop the text.
+        if engine.send(draft) {
+            draft = ""
+        }
     }
 }
 

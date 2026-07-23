@@ -14,10 +14,10 @@ struct SanityTests {
 
     @Suite("Tool definitions", .tags(.tools))
     struct ToolDefinitions {
-        @Test("The registry exposes the three worker tools with unique names")
+        @Test("The registry exposes the four worker tools with unique names")
         func registryShape() {
             let names = ToolRegistry.definitions.map(\.name)
-            #expect(names == ["lookup_customer", "book_appointment", "mark_lead_handled"])
+            #expect(names == ["lookup_customer", "book_appointment", "send_payment_link", "mark_lead_handled"])
             #expect(Set(names).count == names.count)
         }
 
@@ -50,6 +50,35 @@ struct SanityTests {
             #expect(first.id == "A-1042")
             #expect(second.id == "A-1043")
             #expect(store.appointments.count == 2)
+        }
+
+        @Test("Payment links get sequential ids and record the simulated send")
+        func paymentLinks() {
+            let store = CRMStore()
+            let link = store.sendPaymentLink(customerName: "Dana Reyes", amountUSD: 20, memo: "tune-up deposit")
+            #expect(link.id == "PL-5001")
+            #expect(link.url == "https://pay.beaglebike.shop/PL-5001")
+            #expect(store.sendPaymentLink(customerName: "B", amountUSD: 35, memo: "helmet").id == "PL-5002")
+            #expect(store.paymentLinks.count == 2)
+        }
+
+        @Test("The payment tool simulates a text-to-pay send — never card entry")
+        func paymentToolExecution() {
+            let store = CRMStore()
+            let outcome = ToolRegistry.execute(
+                name: "send_payment_link",
+                input: .object([
+                    "customer_name": .string("Dana Reyes"),
+                    "amount_usd": .number(20),
+                    "memo": .string("tune-up deposit"),
+                ]),
+                store: store,
+                leadID: Lead.sample.id
+            )
+            #expect(!outcome.isError)
+            #expect(outcome.result.contains("PL-5001"))
+            #expect(outcome.result.contains("Simulated"))
+            #expect(outcome.activity == "Sent $20 payment link PL-5001")
         }
 
         @Test("Marking a lead handled updates its status")

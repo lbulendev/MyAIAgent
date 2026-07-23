@@ -6,6 +6,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
 import kotlinx.serialization.json.putJsonObject
@@ -55,6 +56,29 @@ object ToolRegistry {
                     add(JsonPrimitive("customer_name"))
                     add(JsonPrimitive("service"))
                     add(JsonPrimitive("day"))
+                }
+            },
+        ),
+        ToolDefinition(
+            name = "send_payment_link",
+            description = "Text the customer a secure payment link to collect a deposit or payment. Call this after booking a service appointment to collect the shop's standard $20 deposit. This simulates sending; do not ask the customer for card details.",
+            inputSchema = buildJsonObject {
+                put("type", "object")
+                putJsonObject("properties") {
+                    putJsonObject("customer_name") { put("type", "string") }
+                    putJsonObject("amount_usd") {
+                        put("type", "integer")
+                        put("description", "Whole-dollar amount, e.g. 20 for the standard deposit")
+                    }
+                    putJsonObject("memo") {
+                        put("type", "string")
+                        put("description", "What the payment is for, e.g. 'tune-up deposit'")
+                    }
+                }
+                putJsonArray("required") {
+                    add(JsonPrimitive("customer_name"))
+                    add(JsonPrimitive("amount_usd"))
+                    add(JsonPrimitive("memo"))
                 }
             },
         ),
@@ -109,6 +133,22 @@ object ToolRegistry {
             }
         }
 
+        "send_payment_link" -> {
+            val customerName = input.string("customer_name")
+            val amountUsd = input.int("amount_usd")
+            val memo = input.string("memo")
+            if (customerName == null || amountUsd == null || memo == null) {
+                Outcome("Missing required fields: customer_name, amount_usd, memo", isError = true, activity = "Payment link failed")
+            } else {
+                val link = store.sendPaymentLink(customerName, amountUsd, memo)
+                Outcome(
+                    "Sent payment link ${link.id} (${link.url}) to $customerName for $$amountUsd — $memo. Simulated: no real charge.",
+                    isError = false,
+                    activity = "Sent $$amountUsd payment link ${link.id}",
+                )
+            }
+        }
+
         "mark_lead_handled" -> {
             val summary = input.string("summary").orEmpty()
             store.markLeadHandled(leadId)
@@ -120,4 +160,7 @@ object ToolRegistry {
 
     private fun JsonObject.string(key: String): String? =
         (this[key] as? JsonPrimitive)?.contentOrNull
+
+    private fun JsonObject.int(key: String): Int? =
+        (this[key] as? JsonPrimitive)?.intOrNull
 }

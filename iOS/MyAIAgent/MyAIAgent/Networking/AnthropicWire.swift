@@ -52,6 +52,11 @@ nonisolated enum JSONValue: Codable, Equatable {
         if case .string(let value) = self { return value }
         return nil
     }
+
+    var intValue: Int? {
+        if case .number(let value) = self { return Int(value) }
+        return nil
+    }
 }
 
 // MARK: Request

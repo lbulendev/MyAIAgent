@@ -224,6 +224,23 @@ class RegressionTest {
         }
 
         @Test
+        fun `a send while the agent is running is refused, not silently dropped`() = runTest {
+            val provider = FakeModelProvider(listOf(ScriptedTurn.Hang))
+            val (engine, _, _) = makeEngine(this, provider)
+
+            engine.startIfNeeded()
+            runCurrent()
+            assertEquals(AgentState.Thinking, engine.state.value)
+
+            // The composer keeps the draft when this returns false.
+            assertFalse(engine.send("yes, on tuesday"))
+            assertNull(engine.transcript.value.firstOrNull { it.text == "yes, on tuesday" })
+
+            engine.cancel()
+            advanceUntilIdle()
+        }
+
+        @Test
         fun `cancel mid-stream leaves the session idle and resumable - never a spinner`() = runTest {
             val provider = FakeModelProvider(listOf(ScriptedTurn.Hang))
             val (engine, _, outbox) = makeEngine(this, provider)

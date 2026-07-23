@@ -55,13 +55,17 @@ final class AgentEngine {
     }
 
     /// Sends a follow-up message (spoken as the customer, keeping the demo
-    /// a two-party conversation).
-    func send(_ text: String) {
+    /// a two-party conversation). Returns whether the message was accepted —
+    /// a send while a run is in flight is refused, and the caller must keep
+    /// the draft rather than dropping it.
+    @discardableResult
+    func send(_ text: String) -> Bool {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty, runTask == nil else { return }
+        guard !trimmed.isEmpty, runTask == nil else { return false }
         transcript.append(ChatMessage(kind: .customer, text: trimmed))
         conversation.append(.user(trimmed))
         kickoff()
+        return true
     }
 
     /// Replays a conversation that was interrupted mid-run (app killed,
@@ -213,6 +217,9 @@ final class AgentEngine {
         existing customer.
         - Only book after the customer has named a service and a day; \
         otherwise ask.
+        - After booking a service appointment, use send_payment_link to \
+        collect the shop's standard $20 deposit, and tell the customer the \
+        link is on its way. Never ask for card details in chat.
         - The shop is open Tuesday through Saturday, 9am to 6pm.
         - When the request is fully resolved, call mark_lead_handled with a \
         one-sentence summary.

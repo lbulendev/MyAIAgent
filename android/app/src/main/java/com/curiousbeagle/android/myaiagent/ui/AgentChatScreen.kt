@@ -64,7 +64,7 @@ fun AgentChatRoute(engine: AgentEngine, modifier: Modifier = Modifier) {
         transcript = transcript,
         state = state,
         canResume = canResume,
-        onSend = engine::send,
+        onSend = { engine.send(it) },
         onCancel = engine::cancel,
         onRetry = engine::retry,
         onResume = engine::resume,
@@ -80,7 +80,7 @@ fun AgentChatScreen(
     transcript: List<ChatMessage>,
     state: AgentState,
     canResume: Boolean,
-    onSend: (String) -> Unit,
+    onSend: (String) -> Boolean,
     onCancel: () -> Unit,
     onRetry: () -> Unit,
     onResume: () -> Unit,
@@ -98,8 +98,11 @@ fun AgentChatScreen(
                 onDraftChange = { draft = it },
                 isRunning = isRunning,
                 onSend = {
-                    onSend(draft)
-                    draft = ""
+                    // Clear the draft only if the engine accepted it — a send
+                    // while the agent is running must not drop the text.
+                    if (onSend(draft)) {
+                        draft = ""
+                    }
                 },
                 onCancel = onCancel,
             )
@@ -275,7 +278,7 @@ private fun ChatScreenErrorPreview() {
             transcript = listOf(ChatMessage(kind = ChatMessage.Kind.CUSTOMER, text = Lead.sample.message)),
             state = AgentState.Failed(AgentError.OFFLINE),
             canResume = true,
-            onSend = {}, onCancel = {}, onRetry = {}, onResume = {},
+            onSend = { false }, onCancel = {}, onRetry = {}, onResume = {},
         )
     }
 }
