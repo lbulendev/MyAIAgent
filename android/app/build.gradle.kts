@@ -1,24 +1,38 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
+}
+
+// Anthropic API key: git-ignored local.properties first, env var fallback —
+// the TheMovieDBSwift pattern. The app fails fast into KeyMissingScreen
+// when the resolved value is empty; never hardcode a key.
+val anthropicApiKey: String = run {
+    val localProperties = rootProject.file("local.properties")
+    val fromFile = if (localProperties.exists()) {
+        Properties().apply { localProperties.inputStream().use(::load) }
+            .getProperty("ANTHROPIC_API_KEY")
+    } else null
+    fromFile ?: System.getenv("ANTHROPIC_API_KEY") ?: ""
 }
 
 android {
     namespace = "com.curiousbeagle.android.myaiagent"
     compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
+        version = release(37)
     }
 
     defaultConfig {
         applicationId = "com.curiousbeagle.android.myaiagent"
-        minSdk = 35
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "ANTHROPIC_API_KEY", "\"$anthropicApiKey\"")
     }
 
     buildTypes {
@@ -34,6 +48,21 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+}
+
+// Unit tests run on JUnit 5 so suites can carry the smoke/sanity/regression
+// tag taxonomy (see TestPlans.md). -PincludeTags=smoke mirrors the iOS
+// SmokeTests plan; no property runs everything (FullTests).
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform {
+        providers.gradleProperty("includeTags").orNull
+            ?.takeIf { it.isNotBlank() }
+            ?.let { includeTags(*it.split(",").map(String::trim).toTypedArray()) }
+    }
+    testLogging {
+        events("passed", "skipped", "failed")
     }
 }
 
@@ -41,12 +70,23 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    testImplementation(libs.junit)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.okhttp)
+
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    testImplementation(libs.kotlinx.coroutines.test)
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)

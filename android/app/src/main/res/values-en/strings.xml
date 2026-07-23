@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Shared snake_case keyspace, mirrored with iOS Localizable.xcstrings -->
-    <string name="app_name">MyAIAgent</string>
     <string name="agent_state_streaming">Replying…</string>
     <string name="agent_state_thinking">Thinking…</string>
     <string name="agent_state_tool">Running %1$s…</string>
