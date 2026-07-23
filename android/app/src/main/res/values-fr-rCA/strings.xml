@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="agent_state_streaming">Réponse en cours…</string>
+    <string name="agent_state_thinking">Réflexion…</string>
+    <string name="agent_state_tool">Exécution de %1$s…</string>
+    <string name="cancel_button">Annuler</string>
+    <string name="chat_input_placeholder">Répondez en tant que client…</string>
+    <string name="error_generic">Une erreur s\'est produite.</string>
+    <string name="error_offline">Vous semblez être hors ligne.</string>
+    <string name="error_server">Le service rencontre des difficultés en ce moment.</string>
+    <string name="key_missing_body">Ajoutez ANTHROPIC_API_KEY à local.properties (ou exportez-la dans votre environnement) et recompilez. Consultez le README pour plus de détails.</string>
+    <string name="key_missing_title">Clé API manquante</string>
+    <string name="lead_status_handled">Traité</string>
+    <string name="lead_status_in_progress">En cours</string>
+    <string name="lead_status_new">Nouveau</string>
+    <string name="leads_title">Clients potentiels</string>
+    <string name="resume_banner">Cette conversation a été interrompue.</string>
+    <string name="resume_button">Reprendre</string>
+    <string name="retry">Réessayer</string>
+    <string name="send_button">Envoyer</string>
+</resources>
