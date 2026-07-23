@@ -6,6 +6,8 @@ import com.curiousbeagle.android.myaiagent.model.AgentError
 import com.curiousbeagle.android.myaiagent.model.AgentFailure
 import com.curiousbeagle.android.myaiagent.model.CrmStore
 import com.curiousbeagle.android.myaiagent.model.Lead
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
@@ -28,9 +30,9 @@ class SanityTest {
     inner class ToolDefinitions {
 
         @Test
-        fun `the registry exposes the three worker tools with unique names`() {
+        fun `the registry exposes the four worker tools with unique names`() {
             val names = ToolRegistry.definitions.map { it.name }
-            assertEquals(listOf("lookup_customer", "book_appointment", "mark_lead_handled"), names)
+            assertEquals(listOf("lookup_customer", "book_appointment", "send_payment_link", "mark_lead_handled"), names)
             assertEquals(names.size, names.toSet().size)
         }
 
@@ -67,6 +69,35 @@ class SanityTest {
             assertEquals("A-1042", first.id)
             assertEquals("A-1043", second.id)
             assertEquals(2, store.appointments.value.size)
+        }
+
+        @Test
+        fun `payment links get sequential ids and record the simulated send`() {
+            val store = CrmStore()
+            val link = store.sendPaymentLink("Dana Reyes", 20, "tune-up deposit")
+            assertEquals("PL-5001", link.id)
+            assertEquals("https://pay.beaglebike.shop/PL-5001", link.url)
+            assertEquals("PL-5002", store.sendPaymentLink("B", 35, "helmet").id)
+            assertEquals(2, store.paymentLinks.value.size)
+        }
+
+        @Test
+        fun `the payment tool simulates a text-to-pay send - never card entry`() {
+            val store = CrmStore()
+            val outcome = ToolRegistry.execute(
+                name = "send_payment_link",
+                input = buildJsonObject {
+                    put("customer_name", "Dana Reyes")
+                    put("amount_usd", 20)
+                    put("memo", "tune-up deposit")
+                },
+                store = store,
+                leadId = Lead.sample.id,
+            )
+            assertEquals(false, outcome.isError)
+            assertTrue(outcome.result.contains("PL-5001"))
+            assertTrue(outcome.result.contains("Simulated"))
+            assertEquals("Sent \$20 payment link PL-5001", outcome.activity)
         }
 
         @Test

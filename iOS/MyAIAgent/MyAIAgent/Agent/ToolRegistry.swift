@@ -44,6 +44,25 @@ enum ToolRegistry {
             ])
         ),
         ToolDefinition(
+            name: "send_payment_link",
+            description: "Text the customer a secure payment link to collect a deposit or payment. Call this after booking a service appointment to collect the shop's standard $20 deposit. This simulates sending; do not ask the customer for card details.",
+            inputSchema: .object([
+                "type": .string("object"),
+                "properties": .object([
+                    "customer_name": .object(["type": .string("string")]),
+                    "amount_usd": .object([
+                        "type": .string("integer"),
+                        "description": .string("Whole-dollar amount, e.g. 20 for the standard deposit"),
+                    ]),
+                    "memo": .object([
+                        "type": .string("string"),
+                        "description": .string("What the payment is for, e.g. 'tune-up deposit'"),
+                    ]),
+                ]),
+                "required": .array([.string("customer_name"), .string("amount_usd"), .string("memo")]),
+            ])
+        ),
+        ToolDefinition(
             name: "mark_lead_handled",
             description: "Mark the current lead as handled once the customer's request is fully resolved. Call this exactly once, at the end.",
             inputSchema: .object([
@@ -93,6 +112,19 @@ enum ToolRegistry {
                 "Booked appointment \(appointment.id): \(service) for \(customerName) on \(day).",
                 false,
                 "Booked \(appointment.id) — \(service), \(day)"
+            )
+
+        case "send_payment_link":
+            guard let customerName = input["customer_name"]?.stringValue,
+                  let amountUSD = input["amount_usd"]?.intValue,
+                  let memo = input["memo"]?.stringValue else {
+                return ("Missing required fields: customer_name, amount_usd, memo", true, "Payment link failed")
+            }
+            let link = store.sendPaymentLink(customerName: customerName, amountUSD: amountUSD, memo: memo)
+            return (
+                "Sent payment link \(link.id) (\(link.url)) to \(customerName) for $\(amountUSD) — \(memo). Simulated: no real charge.",
+                false,
+                "Sent $\(amountUSD) payment link \(link.id)"
             )
 
         case "mark_lead_handled":

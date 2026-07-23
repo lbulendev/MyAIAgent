@@ -215,6 +215,25 @@ struct RegressionTests {
             try await waitUntil { engine.state == .failed(.server) }
         }
 
+        @Test("A send while the agent is running is refused, not silently dropped")
+        func sendWhileRunningRefused() async throws {
+            let provider = FakeModelProvider(script: [.hang])
+            let (engine, _, _) = makeEngine(provider: provider)
+
+            engine.startIfNeeded()
+            try await waitUntil {
+                if case .thinking = engine.state { return true }
+                return false
+            }
+
+            // The composer keeps the draft when this returns false.
+            #expect(engine.send("yes, on tuesday") == false)
+            #expect(engine.transcript.first(where: { $0.text == "yes, on tuesday" }) == nil)
+
+            engine.cancel()
+            try await waitUntil { engine.state == .idle }
+        }
+
         @Test("Cancel mid-stream leaves the session idle and resumable — never a spinner or a crash")
         func cancelIsResumable() async throws {
             let provider = FakeModelProvider(script: [.hang])
