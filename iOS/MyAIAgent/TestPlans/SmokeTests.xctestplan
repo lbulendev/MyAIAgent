@@ -1,0 +1,32 @@
+{
+  "configurations": [
+    {
+      "id": "BC6BF300-0000-4000-8000-000000000002",
+      "name": "Default",
+      "options": {}
+    }
+  ],
+  "defaultOptions": {
+    "codeCoverage": false
+  },
+  "testTargets": [
+    {
+      "target": {
+        "containerPath": "container:MyAIAgent.xcodeproj",
+        "identifier": "BC6BF31C3012410F0057092A",
+        "name": "MyAIAgentTests"
+      },
+      "selectedTags": [
+        "smoke"
+      ]
+    },
+    {
+      "target": {
+        "containerPath": "container:MyAIAgent.xcodeproj",
+        "identifier": "BC6BF3263012410F0057092A",
+        "name": "MyAIAgentUITests"
+      }
+    }
+  ],
+  "version": 1
+}
