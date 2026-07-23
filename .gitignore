@@ -60,3 +60,9 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# Secrets — never commit credentials (see CLAUDE.md)
+Secrets.xcconfig
+
+# macOS
+.DS_Store

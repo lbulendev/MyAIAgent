@@ -1,0 +1,618 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "agent_state_streaming": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Replying…"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Replying…"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Replying…"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Respondiendo…"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réponse en cours…"
+          }
+        }
+      }
+    },
+    "agent_state_thinking": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thinking…"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Thinking…"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Thinking…"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pensando…"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réflexion…"
+          }
+        }
+      }
+    },
+    "agent_state_tool %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Running %@…"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Running %@…"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Running %@…"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ejecutando %@…"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exécution de %@…"
+          }
+        }
+      }
+    },
+    "cancel_button": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cancel"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Cancel"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuler"
+          }
+        }
+      }
+    },
+    "chat_input_placeholder": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reply as the customer…"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Reply as the customer…"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Reply as the customer…"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Responde como el cliente…"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Répondez en tant que client…"
+          }
+        }
+      }
+    },
+    "error_generic": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something went wrong."
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Something went wrong."
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Something went wrong."
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Algo salió mal."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une erreur s'est produite."
+          }
+        }
+      }
+    },
+    "error_offline": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You appear to be offline."
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "You appear to be offline."
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "You appear to be offline."
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parece que no tienes conexión."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vous semblez être hors ligne."
+          }
+        }
+      }
+    },
+    "error_server": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The service is having trouble right now."
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The service is having trouble right now."
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The service is having trouble right now."
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El servicio tiene problemas en este momento."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le service rencontre des difficultés en ce moment."
+          }
+        }
+      }
+    },
+    "key_missing_body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy Secrets.xcconfig.template to Secrets.xcconfig, set ANTHROPIC_API_KEY, and rebuild. See the README for details."
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Copy Secrets.xcconfig.template to Secrets.xcconfig, set ANTHROPIC_API_KEY, and rebuild. See the README for details."
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Copy Secrets.xcconfig.template to Secrets.xcconfig, set ANTHROPIC_API_KEY, and rebuild. See the README for details."
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copia Secrets.xcconfig.template a Secrets.xcconfig, define ANTHROPIC_API_KEY y vuelve a compilar. Consulta el README para más detalles."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copiez Secrets.xcconfig.template vers Secrets.xcconfig, définissez ANTHROPIC_API_KEY et recompilez. Consultez le README pour plus de détails."
+          }
+        }
+      }
+    },
+    "key_missing_title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API Key Missing"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "API Key Missing"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "API Key Missing"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Falta la clave de API"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clé API manquante"
+          }
+        }
+      }
+    },
+    "lead_status_handled": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Handled"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Handled"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Handled"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atendido"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Traité"
+          }
+        }
+      }
+    },
+    "lead_status_in_progress": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In progress"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "In progress"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "In progress"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En curso"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En cours"
+          }
+        }
+      }
+    },
+    "lead_status_new": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "New"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "New"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nuevo"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nouveau"
+          }
+        }
+      }
+    },
+    "leads_title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leads"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Leads"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Leads"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prospectos"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clients potentiels"
+          }
+        }
+      }
+    },
+    "resume_banner": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This conversation was interrupted."
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "This conversation was interrupted."
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "This conversation was interrupted."
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esta conversación fue interrumpida."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cette conversation a été interrompue."
+          }
+        }
+      }
+    },
+    "resume_button": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resume"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Resume"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Resume"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reanudar"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reprendre"
+          }
+        }
+      }
+    },
+    "retry": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retry"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Retry"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Retry"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reintentar"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réessayer"
+          }
+        }
+      }
+    },
+    "send_button": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Send"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Send"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enviar"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Envoyer"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
