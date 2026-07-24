@@ -23,23 +23,20 @@ class SseParser {
      */
     fun consume(line: String): Event? {
         if (line.isEmpty()) {
-            val event = if (currentData.isEmpty()) null else Event(currentName, currentData.joinToString("\n"))
+            val event = if (currentData.isEmpty()) {
+                null
+            } else {
+                Event(currentName, currentData.joinToString("\n"))
+            }
             currentName = null
             currentData.clear()
             return event
         }
         if (line.startsWith(":")) return null // comment / keep-alive
 
-        val colon = line.indexOf(':')
-        val field: String
-        val value: String
-        if (colon >= 0) {
-            field = line.substring(0, colon)
-            value = line.substring(colon + 1).removePrefix(" ")
-        } else {
-            field = line
-            value = ""
-        }
+        val parts = line.split(":", limit = 2)
+        val field = parts.first()
+        val value = parts.last().trim()
 
         when (field) {
             "event" -> currentName = value
