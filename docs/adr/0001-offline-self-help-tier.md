@@ -123,6 +123,33 @@ UI the equivalent affordance is tappable quick-reply chips, which send a
 prefilled message; offline, the chips reduce to the self-help entries so
 the menu itself degrades with the tier.
 
+### 8. Offline chat degrades to a labeled deterministic responder
+
+While offline, the chat itself stays conversational: typed messages get
+an instant local reply — the best-matching guide from the catalog's
+keyword retrieval, or an honest "no offline guide covers that". Two
+rules keep this honest:
+
+- **Never impersonate the AI.** The responder is deterministic retrieval,
+  not a model. Its replies carry a distinct transcript kind, rendered
+  with an explicit "Offline help" label and visibly different styling.
+  The AI worker is never simulated.
+- **The model is never attributed words it didn't say.** Responder
+  replies live only in the visible transcript. The customer's offline
+  messages append to the wire conversation as user turns with the
+  snapshot marked interrupted — exactly the state the resume invariant
+  blesses — so reconnecting replays everything asked offline and the
+  real agent catches up. This is store-and-forward built on the existing
+  resume mechanism, not a new sync path.
+
+**Rejected:** a button list of matched articles in the chat (the original
+sketch). It broke the conversational surface and taught users two
+interaction models; the responder keeps one. The service-menu screen
+(Decision 7) remains the non-conversational capability answer.
+**Rejected:** running a small on-device model offline. Nondeterministic,
+heavy, and unnecessary at this corpus size; the same right-sizing logic
+as Decision 4.
+
 ## Consequences
 
 **Positive**
