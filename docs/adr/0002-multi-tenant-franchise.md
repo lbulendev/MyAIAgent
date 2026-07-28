@@ -3,7 +3,7 @@
 - **Status:** Proposed
 - **Date:** 2026-07-28
 - **Deciders:** Larry Bulen
-- **Feature request:** see the *Multi-tenant franchise* issue in this repo's tracker
+- **Feature request:** [#7 — Multi-tenant franchise: tenant chooser, offline menu & weekly special, constrained ordering](https://github.com/lbulendev/MyAIAgent/issues/7)
 - **Builds on:** [ADR 0001 — Offline self-help tier](0001-offline-self-help-tier.md)
 
 ## Context
