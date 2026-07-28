@@ -175,6 +175,40 @@
         }
       }
     },
+    "composer_queued_hint": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your reply will send as soon as the AI worker finishes."
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Your reply will send as soon as the AI worker finishes."
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Your reply will send as soon as the AI worker finishes."
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tu respuesta se enviará en cuanto el asistente de IA termine."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Votre réponse sera envoyée dès que l'assistant IA aura terminé."
+          }
+        }
+      }
+    },
     "error_generic": {
       "localizations": {
         "en": {

@@ -10,6 +10,7 @@ import SwiftUI
 struct AgentChatView: View {
     @State private var engine: AgentEngine
     @State private var draft = ""
+    @State private var sendQueued = false
     private let connectivity: any ConnectivityMonitoring
 
     init(
@@ -100,33 +101,52 @@ struct AgentChatView: View {
     }
 
     private var composer: some View {
-        HStack(spacing: 8) {
-            TextField(
-                String(localized: "chat_input_placeholder", defaultValue: "Reply as the customer…"),
-                text: $draft,
-                axis: .vertical
-            )
-            .textFieldStyle(.roundedBorder)
-            .onSubmit(sendDraft)
+        VStack(spacing: 6) {
+            if sendQueued && isRunning {
+                Text(String(
+                    localized: "composer_queued_hint",
+                    defaultValue: "Your reply will send as soon as the AI worker finishes."
+                ))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            HStack(spacing: 8) {
+                TextField(
+                    String(localized: "chat_input_placeholder", defaultValue: "Reply as the customer…"),
+                    text: $draft,
+                    axis: .vertical
+                )
+                .textFieldStyle(.roundedBorder)
+                .onSubmit(sendDraft)
 
-            if isRunning {
-                Button {
-                    engine.cancel()
-                } label: {
-                    Image(systemName: "stop.circle.fill")
-                        .font(.title2)
+                if isRunning {
+                    Button {
+                        engine.cancel()
+                    } label: {
+                        Image(systemName: "stop.circle.fill")
+                            .font(.title2)
+                    }
+                    .accessibilityLabel(String(localized: "cancel_button", defaultValue: "Cancel"))
+                } else {
+                    Button(action: sendDraft) {
+                        Image(systemName: "arrow.up.circle.fill")
+                            .font(.title2)
+                    }
+                    .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .accessibilityLabel(String(localized: "send_button", defaultValue: "Send"))
                 }
-                .accessibilityLabel(String(localized: "cancel_button", defaultValue: "Cancel"))
-            } else {
-                Button(action: sendDraft) {
-                    Image(systemName: "arrow.up.circle.fill")
-                        .font(.title2)
-                }
-                .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
-                .accessibilityLabel(String(localized: "send_button", defaultValue: "Send"))
             }
         }
         .padding()
+        .onChange(of: isRunning) { _, running in
+            // A send attempted mid-run was queued, not dropped — deliver it
+            // the moment the agent goes quiet.
+            if !running && sendQueued {
+                sendQueued = false
+                sendDraft()
+            }
+        }
     }
 
     private var isRunning: Bool {
@@ -139,9 +159,13 @@ struct AgentChatView: View {
     private func sendDraft() {
         // Clear the draft only if the engine accepted it — a keyboard-return
         // send while the agent is running must not silently drop the text.
+        // A refusal (run in flight) queues the draft instead of ignoring it.
         let accepted = connectivity.isOnline ? engine.send(draft) : engine.sendWhileOffline(draft)
         if accepted {
             draft = ""
+            sendQueued = false
+        } else if !draft.trimmingCharacters(in: .whitespaces).isEmpty {
+            sendQueued = true
         }
     }
 }
