@@ -137,6 +137,51 @@ struct RegressionTests {
         }
     }
 
+    // MARK: Catalog decode (ADR 0001: tolerant decode)
+
+    @Suite("Catalog decode", .tags(.catalog))
+    struct CatalogDecode {
+        private func decode(_ json: String) throws -> HelpCatalog {
+            try JSONDecoder().decode(HelpCatalog.self, from: Data(json.utf8))
+        }
+
+        @Test("An unknown entry kind is skipped, not a decode failure — new content kinds must not break old clients")
+        func unknownKindSkipped() throws {
+            let catalog = try decode(#"""
+            {"version": 1, "entries": [
+                {"kind": "hologram_demo", "id": "holo", "title": "Hologram"},
+                {"kind": "help_article", "id": "a", "title": "A", "steps": ["one"]}
+            ]}
+            """#)
+            #expect(catalog.entries.map(\.id) == ["a"])
+        }
+
+        @Test("An unknown requires value is never presented as available offline")
+        func unknownRequirementIsOnlineOnly() throws {
+            let catalog = try decode(#"""
+            {"version": 1, "entries": [
+                {"kind": "service", "id": "s", "title": "S", "requires": "bluetooth"}
+            ]}
+            """#)
+            #expect(catalog.entries.first?.requirement == .online)
+            #expect(catalog.entries.first?.isAvailable(online: false) == false)
+        }
+
+        @Test("Unknown fields and missing optionals are tolerated — content can evolve ahead of shipped clients")
+        func unknownFieldsIgnored() throws {
+            let catalog = try decode(#"""
+            {"version": 2, "future_field": {"nested": true}, "entries": [
+                {"kind": "help_article", "id": "a", "title": "A", "video_url": "https://example.com"}
+            ]}
+            """#)
+            let entry = try #require(catalog.entries.first)
+            #expect(entry.summary == "")
+            #expect(entry.keywords.isEmpty)
+            #expect(entry.steps.isEmpty)
+            #expect(entry.requirement == .none)
+        }
+    }
+
     // MARK: Persistence & resume
 
     @Suite("Outbox", .tags(.persistence))

@@ -215,6 +215,10 @@ final class AgentEngine {
         - Reply to the customer in one to three friendly, concise sentences.
         - Use lookup_customer before booking so you know if they are an \
         existing customer.
+        - When the customer asks how to do something covered by a shop \
+        self-help guide, use find_help_article and answer from its steps — \
+        never improvise repair instructions. Mention the guide works \
+        offline in the app.
         - Only book after the customer has named a service and a day; \
         otherwise ask.
         - After booking a service appointment, use send_payment_link to \

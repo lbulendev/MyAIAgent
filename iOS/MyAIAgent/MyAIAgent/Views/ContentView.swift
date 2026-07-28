@@ -8,6 +8,8 @@ import SwiftUI
 /// The lead inbox: inbound customer inquiries the AI worker can take on.
 struct ContentView: View {
     let provider: any ModelProvider
+    let connectivity: any ConnectivityMonitoring
+    var catalog: HelpCatalog = .bundled
     @Environment(CRMStore.self) private var store
 
     var body: some View {
@@ -19,7 +21,44 @@ struct ContentView: View {
             }
             .navigationTitle(String(localized: "leads_title", defaultValue: "Leads"))
             .navigationDestination(for: Lead.self) { lead in
-                AgentChatView(lead: lead, provider: provider, store: store)
+                AgentChatView(
+                    lead: lead,
+                    provider: provider,
+                    store: store,
+                    connectivity: connectivity,
+                    catalog: catalog
+                )
+            }
+            .navigationDestination(for: HelpCatalog.Entry.self) { article in
+                HelpArticleView(article: article)
+            }
+            .toolbar {
+                ToolbarItem {
+                    NavigationLink {
+                        HelpLibraryView(catalog: catalog, isOnline: connectivity.isOnline)
+                    } label: {
+                        Label(
+                            String(localized: "help_button", defaultValue: "Help"),
+                            systemImage: "lifepreserver"
+                        )
+                    }
+                }
+            }
+            .safeAreaInset(edge: .top, spacing: 0) {
+                if !connectivity.isOnline {
+                    Label(
+                        String(
+                            localized: "offline_inbox_notice",
+                            defaultValue: "You're offline. Self-help guides are still available."
+                        ),
+                        systemImage: "wifi.slash"
+                    )
+                    .font(.footnote)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 16)
+                    .background(.gray.opacity(0.15))
+                }
             }
         }
     }
@@ -77,23 +116,28 @@ struct StatusBadge: View {
 
 #if DEBUG
 #Preview {
-    ContentView(provider: PreviewModelProvider())
+    ContentView(provider: PreviewModelProvider(), connectivity: StubConnectivityMonitor())
+        .environment(CRMStore())
+}
+
+#Preview("Offline") {
+    ContentView(provider: PreviewModelProvider(), connectivity: StubConnectivityMonitor(isOnline: false))
         .environment(CRMStore())
 }
 
 #Preview("Small iPhone") {
-    ContentView(provider: PreviewModelProvider())
+    ContentView(provider: PreviewModelProvider(), connectivity: StubConnectivityMonitor())
         .environment(CRMStore())
 }
 
 #Preview("Dark") {
-    ContentView(provider: PreviewModelProvider())
+    ContentView(provider: PreviewModelProvider(), connectivity: StubConnectivityMonitor())
         .environment(CRMStore())
         .preferredColorScheme(.dark)
 }
 
 #Preview("XL type") {
-    ContentView(provider: PreviewModelProvider())
+    ContentView(provider: PreviewModelProvider(), connectivity: StubConnectivityMonitor())
         .environment(CRMStore())
         .environment(\.dynamicTypeSize, .accessibility2)
 }

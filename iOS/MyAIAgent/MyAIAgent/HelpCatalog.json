@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "kind": "service",
+      "id": "ai-assistant",
+      "title": "Ask the AI assistant",
+      "summary": "Chat with our AI worker about repairs, products, and scheduling.",
+      "keywords": ["question", "chat", "help"],
+      "requires": "online"
+    },
+    {
+      "kind": "service",
+      "id": "book-repair",
+      "title": "Book a repair",
+      "summary": "Set up a service appointment in chat and pay your deposit by text link.",
+      "keywords": ["book", "appointment", "repair", "schedule"],
+      "requires": "online"
+    },
+    {
+      "kind": "service",
+      "id": "live-fitting",
+      "title": "Live bike fitting session",
+      "summary": "A video session with a fitter to dial in saddle height and reach.",
+      "keywords": ["fitting", "fit", "video"],
+      "requires": "online"
+    },
+    {
+      "kind": "help_article",
+      "id": "fix-flat",
+      "title": "Fix a flat tire",
+      "summary": "Replace or patch a punctured tube in about 15 minutes with tire levers and a pump.",
+      "keywords": ["flat", "tire", "tires", "tube", "puncture", "pump"],
+      "requires": "none",
+      "steps": [
+        "Remove the wheel: release the brake if needed, open the quick-release or thru-axle, and slide the wheel out.",
+        "Pull one side of the tire off the rim with tire levers and remove the tube.",
+        "Find the cause: run your fingers carefully along the inside of the tire for glass, thorns, or sharp spots.",
+        "Fit the new or patched tube: inflate it just enough to hold shape, seat the valve, and tuck it into the tire.",
+        "Work the tire bead back onto the rim with your thumbs — avoid levers here, they pinch tubes.",
+        "Inflate to the pressure printed on the tire sidewall and refit the wheel."
+      ]
+    },
+    {
+      "kind": "help_article",
+      "id": "squeaky-brakes",
+      "title": "Quiet squeaky brakes",
+      "summary": "Most brake squeal is contamination or pad alignment — both fixable at home.",
+      "keywords": ["brake", "brakes", "squeak", "squeaky", "squeal", "noise"],
+      "requires": "none",
+      "steps": [
+        "Clean the rims or rotors with isopropyl alcohol and a clean rag.",
+        "Check pad wear: replace pads worn past their indicator line.",
+        "Look for glazing: lightly sand glazed pads with fine sandpaper.",
+        "Align the pads so they meet the braking surface squarely.",
+        "If squeal continues, ride with light braking for a few minutes to bed the pads in."
+      ]
+    },
+    {
+      "kind": "help_article",
+      "id": "chain-care",
+      "title": "Chain care basics",
+      "summary": "A clean, lubed chain shifts better and stops gear skipping before it starts.",
+      "keywords": ["chain", "lube", "rust", "skipping", "gears", "derailleur", "shifting"],
+      "requires": "none",
+      "steps": [
+        "Wipe the chain with a dry rag while backpedaling.",
+        "Apply one drop of bike-specific lube to each roller.",
+        "Backpedal a dozen turns so the lube works in, then wipe off the excess.",
+        "Check for wear with a chain checker — replace at 0.75% stretch.",
+        "If gears still skip after cleaning and lubing, the cassette or derailleur needs a shop adjustment — book a tune-up."
+      ]
+    },
+    {
+      "kind": "help_article",
+      "id": "drop-off-prep",
+      "title": "Prep your bike for service drop-off",
+      "summary": "Five minutes of prep makes your service visit faster.",
+      "keywords": ["appointment", "drop", "drop-off", "service", "tune-up", "visit"],
+      "requires": "none",
+      "steps": [
+        "Note your symptoms: when the problem happens and what it sounds like.",
+        "Remove accessories: lights, bags, GPS mounts, and locks.",
+        "Charge e-bike batteries to at least 50% and bring your key.",
+        "Arrive during drop-off hours, Tuesday to Saturday 9am to 6pm."
+      ]
+    }
+  ]
+}

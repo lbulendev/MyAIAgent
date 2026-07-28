@@ -25,6 +25,20 @@ enum ToolRegistry {
             ])
         ),
         ToolDefinition(
+            name: "find_help_article",
+            description: "Search the shop's self-help guides (flat tires, squeaky brakes, chain care, service drop-off prep) for a customer question. Returns the step-by-step guide so you answer from shop-approved instructions instead of improvising repair advice. Mention that the guide is available offline in the app's help library.",
+            inputSchema: .object([
+                "type": .string("object"),
+                "properties": .object([
+                    "topic": .object([
+                        "type": .string("string"),
+                        "description": .string("What the customer needs help with, in a few words, e.g. 'flat tire'"),
+                    ]),
+                ]),
+                "required": .array([.string("topic")]),
+            ])
+        ),
+        ToolDefinition(
             name: "book_appointment",
             description: "Book a service appointment. Call this when the customer has agreed on a service and a day.",
             inputSchema: .object([
@@ -85,9 +99,26 @@ enum ToolRegistry {
         name: String,
         input: JSONValue,
         store: CRMStore,
-        leadID: UUID
+        leadID: UUID,
+        catalog: HelpCatalog = .bundled
     ) -> (result: String, isError: Bool, activity: String) {
         switch name {
+        case "find_help_article":
+            guard let topic = input["topic"]?.stringValue, !topic.isEmpty else {
+                return ("Missing required field: topic", true, "Guide search failed")
+            }
+            guard let article = catalog.matches(for: topic).first(where: { $0.kind == .helpArticle }) else {
+                return ("No self-help guide matches \"\(topic)\".", false, "No guide for \"\(topic)\"")
+            }
+            let steps = article.steps.enumerated()
+                .map { "\($0.offset + 1). \($0.element)" }
+                .joined(separator: "\n")
+            return (
+                "Guide: \(article.title)\n\(steps)\nThis guide is available offline in the app's help library.",
+                false,
+                "Shared guide: \(article.title)"
+            )
+
         case "lookup_customer":
             guard let customerName = input["name"]?.stringValue else {
                 return ("Missing required field: name", true, "Customer lookup failed")

@@ -15,9 +15,10 @@ every agentic mechanic implemented natively on the client.
 - **Low-latency streaming** — assistant replies stream token by token into
   the transcript over Server-Sent Events
 - **Client-side tool orchestration** — the model calls `lookup_customer`,
-  `book_appointment`, `send_payment_link`, and `mark_lead_handled`; the
-  app executes them against a mock CRM and feeds results back in a
-  multi-step loop until the turn completes
+  `find_help_article`, `book_appointment`, `send_payment_link`, and
+  `mark_lead_handled`; the app executes them against a mock CRM and a
+  bundled help catalog, feeding results back in a multi-step loop until
+  the turn completes
 - **Conversations into revenue** — after booking, the agent collects a
   deposit through a simulated text-to-pay link (guardrailed: the prompt
   and tool description forbid asking for card details in chat; nothing
@@ -30,10 +31,17 @@ every agentic mechanic implemented natively on the client.
   resumable and replays from the last durable boundary
 - **Honest failure UX** — errors map to offline/server/generic categories
   with a red banner and Retry; raw error text never reaches the screen
+- **Offline self-help tier** (iOS; Android mirror tracked in #6) — a
+  bundled catalog of shop-approved guides browsable fully offline with a
+  data-driven service menu and availability badges; online, the agent
+  grounds repair answers in the same catalog via `find_help_article`;
+  offline, the chat routes to matched guides instead of a dead end
+  (decisions recorded in ADR 0001)
 - **Testability by design** — a `ModelProvider` seam at the network
   boundary means the whole agent loop is unit-tested with a scripted fake,
-  tagged `smoke` / `sanity` / `regression`, no network required — 30 tests
-  on iOS (Swift Testing), 29 on Android (JUnit 5), mirrored test-for-test
+  tagged `smoke` / `sanity` / `regression`, no network required — 41 tests
+  on iOS (Swift Testing), 29 on Android (JUnit 5); the core agent suites
+  mirror test-for-test, and the self-help tier's Android mirror is next
 - **Dual-native discipline** — the same feature shipped twice, natively:
   shared wire format, shared snapshot format, shared localization keyspace,
   and a pinned regression suite on each side for the platform-specific

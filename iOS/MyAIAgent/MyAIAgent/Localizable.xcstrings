@@ -273,6 +273,244 @@
         }
       }
     },
+    "help_badge_needs_connection": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Needs connection"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Needs connection"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Needs connection"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Requiere conexión"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connexion requise"
+          }
+        }
+      }
+    },
+    "help_badge_offline": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Available offline"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Available offline"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Available offline"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disponible sin conexión"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disponible hors ligne"
+          }
+        }
+      }
+    },
+    "help_badge_online_only": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Online only"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Online only"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Online only"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Solo en línea"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En ligne seulement"
+          }
+        }
+      }
+    },
+    "help_button": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Help"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Help"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Help"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayuda"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aide"
+          }
+        }
+      }
+    },
+    "help_section_guides": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Self-help guides"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Self-help guides"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Self-help guides"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guías de autoayuda"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guides d'auto-assistance"
+          }
+        }
+      }
+    },
+    "help_section_services": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Services"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Services"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Services"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Servicios"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Services"
+          }
+        }
+      }
+    },
+    "help_title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How can we help?"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "How can we help?"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "How can we help?"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Cómo podemos ayudarte?"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comment pouvons-nous vous aider ?"
+          }
+        }
+      }
+    },
     "key_missing_body": {
       "localizations": {
         "en": {
@@ -473,6 +711,108 @@
           "stringUnit": {
             "state": "translated",
             "value": "Clients potentiels"
+          }
+        }
+      }
+    },
+    "offline_chat_banner": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The AI assistant needs a connection. These guides work offline:"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The AI assistant needs a connection. These guides work offline:"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The AI assistant needs a connection. These guides work offline:"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El asistente de IA necesita conexión. Estas guías funcionan sin conexión:"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'assistant IA nécessite une connexion. Ces guides fonctionnent hors ligne :"
+          }
+        }
+      }
+    },
+    "offline_chat_banner_no_matches": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The AI assistant needs a connection. Self-help guides are available in the help library."
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The AI assistant needs a connection. Self-help guides are available in the help library."
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The AI assistant needs a connection. Self-help guides are available in the help library."
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El asistente de IA necesita conexión. Las guías de autoayuda están en la biblioteca de ayuda."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'assistant IA nécessite une connexion. Les guides d'auto-assistance se trouvent dans la bibliothèque d'aide."
+          }
+        }
+      }
+    },
+    "offline_inbox_notice": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're offline. Self-help guides are still available."
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "You're offline. Self-help guides are still available."
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "You're offline. Self-help guides are still available."
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin conexión. Las guías de autoayuda siguen disponibles."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vous êtes hors ligne. Les guides d'auto-assistance restent disponibles."
           }
         }
       }

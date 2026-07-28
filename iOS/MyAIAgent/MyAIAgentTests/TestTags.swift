@@ -30,4 +30,5 @@ extension Tag {
     @Tag static var parsing: Self
     @Tag static var tools: Self
     @Tag static var persistence: Self
+    @Tag static var catalog: Self
 }

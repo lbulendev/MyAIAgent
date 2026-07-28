@@ -50,5 +50,25 @@ struct SmokeTests {
             // The transcript narrates the tool activity between the turns.
             #expect(engine.transcript.map(\.kind) == [.customer, .toolActivity, .agent])
         }
+
+        @Test("The agent grounds answers in a self-help guide: find_help_article round-trips with the shop's steps")
+        func helpArticleRoundTrip() async throws {
+            let provider = FakeModelProvider(script: [
+                .toolTurn(id: "tu_1", name: "find_help_article", inputJSON: #"{"topic": "flat tire"}"#),
+                .textTurn("Here's our flat-fix guide — and it works offline in the app!"),
+            ])
+            let (engine, _, _) = makeEngine(provider: provider)
+
+            engine.startIfNeeded()
+            try await waitUntil { engine.state == .idle && engine.transcript.count == 3 }
+
+            // The tool result carries the shop-approved guide back to the model.
+            let lastMessage = try #require(provider.recordedRequests[1].last)
+            #expect(lastMessage.content.contains { block in
+                if case .toolResult(_, let content, false) = block { return content.contains("Guide: Fix a flat tire") }
+                return false
+            })
+            #expect(engine.transcript.contains { $0.kind == .toolActivity && $0.text == "Shared guide: Fix a flat tire" })
+        }
     }
 }

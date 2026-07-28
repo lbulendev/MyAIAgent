@@ -58,7 +58,9 @@ cd android && JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/
   are Ignored by design, pinned by regression tests on both sides);
   ModelProvider seam (ClaudeProvider = production, FakeModelProvider =
   tests); AgentEngine (state machine + stream→tool→continue loop);
-  ToolRegistry (3 tools vs the mock CRM); AgentOutbox (one JSON snapshot
+  ToolRegistry (5 tools vs the mock CRM + help catalog); ConnectivityMonitor
+  seam (NWPathMonitor prod / scripted stub, ADR 0001); HelpCatalog (bundled
+  canonical JSON, tolerant decode, keyword retrieval); AgentOutbox (one JSON snapshot
   file per lead, injectable directory — deliberately the same file-based
   shape on both platforms rather than DataStore, so the snapshot format
   and tests mirror).

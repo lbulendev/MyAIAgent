@@ -10,9 +10,20 @@ import SwiftUI
 struct AgentChatView: View {
     @State private var engine: AgentEngine
     @State private var draft = ""
+    private let connectivity: any ConnectivityMonitoring
+    private let catalog: HelpCatalog
 
-    init(lead: Lead, provider: any ModelProvider, store: CRMStore, outbox: AgentOutbox = AgentOutbox()) {
+    init(
+        lead: Lead,
+        provider: any ModelProvider,
+        store: CRMStore,
+        outbox: AgentOutbox = AgentOutbox(),
+        connectivity: any ConnectivityMonitoring,
+        catalog: HelpCatalog = .bundled
+    ) {
         _engine = State(initialValue: AgentEngine(lead: lead, provider: provider, store: store, outbox: outbox))
+        self.connectivity = connectivity
+        self.catalog = catalog
     }
 
     var body: some View {
@@ -23,6 +34,9 @@ struct AgentChatView: View {
             if case .failed(let error) = engine.state {
                 ErrorBanner(error: error) { engine.retry() }
                     .padding(.top, 8)
+            }
+            if !connectivity.isOnline {
+                OfflineHelpBanner(suggestions: catalog.offlineSuggestions(for: engine.lead.message))
             }
 
             TranscriptView(messages: engine.transcript, state: engine.state)
@@ -76,7 +90,7 @@ struct AgentChatView: View {
                     Image(systemName: "arrow.up.circle.fill")
                         .font(.title2)
                 }
-                .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
+                .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty || !connectivity.isOnline)
                 .accessibilityLabel(String(localized: "send_button", defaultValue: "Send"))
             }
         }
@@ -156,7 +170,20 @@ struct MessageBubble: View {
             lead: .sample,
             provider: PreviewModelProvider(),
             store: CRMStore(),
-            outbox: AgentOutbox(directory: FileManager.default.temporaryDirectory.appendingPathComponent("preview-\(UUID())"))
+            outbox: AgentOutbox(directory: FileManager.default.temporaryDirectory.appendingPathComponent("preview-\(UUID())")),
+            connectivity: StubConnectivityMonitor()
+        )
+    }
+}
+
+#Preview("Offline") {
+    NavigationStack {
+        AgentChatView(
+            lead: .sample,
+            provider: PreviewModelProvider(),
+            store: CRMStore(),
+            outbox: AgentOutbox(directory: FileManager.default.temporaryDirectory.appendingPathComponent("preview-\(UUID())")),
+            connectivity: StubConnectivityMonitor(isOnline: false)
         )
     }
 }
@@ -178,7 +205,8 @@ struct MessageBubble: View {
             lead: .sample,
             provider: PreviewModelProvider(),
             store: CRMStore(),
-            outbox: AgentOutbox(directory: FileManager.default.temporaryDirectory.appendingPathComponent("preview-\(UUID())"))
+            outbox: AgentOutbox(directory: FileManager.default.temporaryDirectory.appendingPathComponent("preview-\(UUID())")),
+            connectivity: StubConnectivityMonitor()
         )
     }
 }
