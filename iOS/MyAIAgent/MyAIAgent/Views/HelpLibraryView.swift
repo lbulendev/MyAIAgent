@@ -120,51 +120,6 @@ struct HelpArticleView: View {
     }
 }
 
-/// Offline state in the chat: the AI assistant honestly needs a connection,
-/// and matched guides are offered as the productive path (ADR 0001 — offline
-/// is a mode, not a dead end).
-struct OfflineHelpBanner: View {
-    let suggestions: [HelpCatalog.Entry]
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Label(message, systemImage: "wifi.slash")
-                .font(.subheadline)
-            ForEach(suggestions) { article in
-                NavigationLink(value: article) {
-                    HStack {
-                        Image(systemName: "book")
-                        Text(article.title)
-                            .font(.subheadline.weight(.semibold))
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                    }
-                }
-                .buttonStyle(.plain)
-            }
-        }
-        .padding(.vertical, 10)
-        .padding(.horizontal, 16)
-        .background(.gray.opacity(0.15), in: RoundedRectangle(cornerRadius: 12))
-        .padding([.horizontal, .top])
-    }
-
-    private var message: String {
-        if suggestions.isEmpty {
-            String(
-                localized: "offline_chat_banner_no_matches",
-                defaultValue: "The AI assistant needs a connection. Self-help guides are available in the help library."
-            )
-        } else {
-            String(
-                localized: "offline_chat_banner",
-                defaultValue: "The AI assistant needs a connection. These guides work offline:"
-            )
-        }
-    }
-}
-
 #if DEBUG
 #Preview {
     NavigationStack {
@@ -185,13 +140,6 @@ struct OfflineHelpBanner: View {
         if let article = HelpCatalog.bundled.articles.first {
             HelpArticleView(article: article)
         }
-    }
-}
-
-#Preview("Offline banner") {
-    VStack {
-        OfflineHelpBanner(suggestions: HelpCatalog.bundled.offlineSuggestions(for: "flat tire on my commuter"))
-        OfflineHelpBanner(suggestions: [])
     }
 }
 

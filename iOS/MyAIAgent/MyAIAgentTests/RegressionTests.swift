@@ -202,6 +202,22 @@ struct RegressionTests {
             #expect(outbox.load(for: leadID) == nil)
         }
 
+        @Test("offlineHelp transcript entries round-trip — the shared snapshot format gained a message kind and Android must mirror it")
+        func offlineHelpKindRoundTrips() {
+            let outbox = AgentOutbox(directory: temporaryOutboxDirectory())
+            let leadID = UUID()
+            let snapshot = AgentOutbox.SessionSnapshot(
+                conversation: [.user("how do I fix a flat?")],
+                transcript: [
+                    ChatMessage(kind: .customer, text: "how do I fix a flat?"),
+                    ChatMessage(kind: .offlineHelp, text: "Fix a flat tire\n1. Remove the wheel…"),
+                ],
+                interrupted: true
+            )
+            outbox.save(snapshot, for: leadID)
+            #expect(outbox.load(for: leadID) == snapshot)
+        }
+
         @Test("An interrupted session restores as resumable and replays a user-terminated conversation")
         func resumeReplaysConversation() async throws {
             let lead = Lead.sample
@@ -227,6 +243,61 @@ struct RegressionTests {
             let request = try #require(provider.recordedRequests.first)
             #expect(request.last?.role == "user")
             #expect(engine.canResume == false)
+        }
+    }
+
+    // MARK: Offline responder (ADR 0001: labeled local replies, store-and-forward)
+
+    @Suite("Offline responder", .tags(.agent))
+    @MainActor
+    struct OfflineResponder {
+        @Test("Responder replies never enter the wire conversation — the model must not be attributed words it didn't say")
+        func repliesStayOutOfWire() throws {
+            let provider = FakeModelProvider(script: [])
+            let (engine, _, outbox) = makeEngine(provider: provider)
+
+            engine.startOfflineIfNeeded()
+            engine.sendWhileOffline("how do I fix a flat tire?")
+
+            let snapshot = try #require(outbox.load(for: engine.lead.id))
+            #expect(snapshot.interrupted)
+            #expect(snapshot.conversation.allSatisfy { $0.role == "user" })
+            #expect(snapshot.conversation.last?.role == "user")
+            // The guide text reached the transcript, not the wire.
+            #expect(engine.transcript.contains { $0.kind == .offlineHelp && $0.text.contains("Fix a flat tire") })
+        }
+
+        @Test("Questions asked offline replay to the real agent on resume — store-and-forward via the resume invariant")
+        func offlineQuestionsReplayOnResume() async throws {
+            let provider = FakeModelProvider(script: [.textTurn("Back online — happy to book that flat fix!")])
+            let (engine, _, _) = makeEngine(provider: provider)
+
+            engine.startOfflineIfNeeded()
+            engine.sendWhileOffline("how do I fix a flat tire?")
+            #expect(engine.canResume)
+
+            engine.resume()
+            try await waitUntil { engine.state == .idle && engine.transcript.last?.kind == .agent }
+
+            let request = try #require(provider.recordedRequests.first)
+            #expect(request.allSatisfy { $0.role == "user" })
+            #expect(request.contains { message in
+                message.content.contains { block in
+                    if case .text(let text) = block { return text.contains("flat tire") }
+                    return false
+                }
+            })
+        }
+
+        @Test("No matching guide gets the honest no-match reply, never silence or a fake answer")
+        func noMatchIsHonest() {
+            let provider = FakeModelProvider(script: [])
+            let (engine, _, _) = makeEngine(provider: provider)
+
+            engine.sendWhileOffline("xylophone lessons")
+
+            #expect(engine.transcript.last?.kind == .offlineHelp)
+            #expect(engine.transcript.last?.text.contains("No offline guide") == true)
         }
     }
 

@@ -70,5 +70,19 @@ struct SmokeTests {
             })
             #expect(engine.transcript.contains { $0.kind == .toolActivity && $0.text == "Shared guide: Fix a flat tire" })
         }
+
+        @Test("Opening a lead offline answers instantly from the local catalog — no network touched")
+        func offlineOpenAnswersLocally() {
+            let provider = FakeModelProvider(script: [])
+            let (engine, _, _) = makeEngine(provider: provider)
+
+            engine.startOfflineIfNeeded()
+
+            // Sample lead: "derailleur is skipping gears" → the chain guide.
+            #expect(engine.transcript.map(\.kind) == [.customer, .offlineHelp])
+            #expect(engine.transcript.last?.text.contains("Chain care basics") == true)
+            #expect(provider.recordedRequests.isEmpty)
+            #expect(engine.canResume)
+        }
     }
 }

@@ -21,6 +21,7 @@ final class AgentEngine {
     private let provider: any ModelProvider
     private let store: CRMStore
     private let outbox: AgentOutbox
+    private let catalog: HelpCatalog
 
     private(set) var transcript: [ChatMessage] = []
     private(set) var state: AgentState = .idle
@@ -29,11 +30,18 @@ final class AgentEngine {
     private var conversation: [WireMessage] = []
     private var runTask: Task<Void, Never>?
 
-    init(lead: Lead, provider: any ModelProvider, store: CRMStore, outbox: AgentOutbox = AgentOutbox()) {
+    init(
+        lead: Lead,
+        provider: any ModelProvider,
+        store: CRMStore,
+        outbox: AgentOutbox = AgentOutbox(),
+        catalog: HelpCatalog = .bundled
+    ) {
         self.lead = lead
         self.provider = provider
         self.store = store
         self.outbox = outbox
+        self.catalog = catalog
 
         if let saved = outbox.load(for: lead.id) {
             conversation = saved.conversation
@@ -66,6 +74,58 @@ final class AgentEngine {
         conversation.append(.user(trimmed))
         kickoff()
         return true
+    }
+
+    // MARK: Offline tier (ADR 0001)
+    //
+    // While offline, the chat degrades to a deterministic local responder:
+    // guide lookups from the bundled catalog, clearly labeled — never the
+    // AI worker. The customer's messages still append to the wire
+    // conversation as user turns with the snapshot marked interrupted,
+    // which is exactly the state the resume invariant blesses — so when
+    // connectivity returns, the ordinary resume path replays everything
+    // asked offline and the real agent catches up. Responder replies live
+    // only in the transcript: the model is never attributed words it
+    // didn't say.
+
+    /// Opens a session while offline: the lead's message lands in the
+    /// transcript and the responder immediately offers a matching guide.
+    func startOfflineIfNeeded() {
+        guard conversation.isEmpty else { return }
+        store.markLeadInProgress(id: lead.id)
+        transcript.append(ChatMessage(kind: .customer, text: lead.message))
+        conversation.append(.user("New \(lead.channel) lead from \(lead.customerName): \"\(lead.message)\""))
+        respondOffline(to: lead.message)
+    }
+
+    /// Handles a message typed while offline: queued for the agent via the
+    /// outbox, answered locally from the catalog in the meantime.
+    @discardableResult
+    func sendWhileOffline(_ text: String) -> Bool {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, runTask == nil else { return false }
+        transcript.append(ChatMessage(kind: .customer, text: trimmed))
+        conversation.append(.user(trimmed))
+        respondOffline(to: trimmed)
+        return true
+    }
+
+    private func respondOffline(to query: String) {
+        let reply: String
+        if let article = catalog.offlineSuggestions(for: query, limit: 1).first {
+            let steps = article.steps.enumerated()
+                .map { "\($0.offset + 1). \($0.element)" }
+                .joined(separator: "\n")
+            reply = "\(article.title)\n\(steps)"
+        } else {
+            reply = String(
+                localized: "offline_help_no_match",
+                defaultValue: "No offline guide covers that. Your message is saved — the AI assistant will pick it up when you're back online."
+            )
+        }
+        transcript.append(ChatMessage(kind: .offlineHelp, text: reply))
+        canResume = true
+        persist(interrupted: true)
     }
 
     /// Replays a conversation that was interrupted mid-run (app killed,

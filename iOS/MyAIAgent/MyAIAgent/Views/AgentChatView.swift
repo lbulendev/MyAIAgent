@@ -11,7 +11,6 @@ struct AgentChatView: View {
     @State private var engine: AgentEngine
     @State private var draft = ""
     private let connectivity: any ConnectivityMonitoring
-    private let catalog: HelpCatalog
 
     init(
         lead: Lead,
@@ -21,14 +20,20 @@ struct AgentChatView: View {
         connectivity: any ConnectivityMonitoring,
         catalog: HelpCatalog = .bundled
     ) {
-        _engine = State(initialValue: AgentEngine(lead: lead, provider: provider, store: store, outbox: outbox))
+        _engine = State(initialValue: AgentEngine(
+            lead: lead,
+            provider: provider,
+            store: store,
+            outbox: outbox,
+            catalog: catalog
+        ))
         self.connectivity = connectivity
-        self.catalog = catalog
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            if engine.canResume {
+            // Resuming needs the network — only invite it when it can work.
+            if engine.canResume && connectivity.isOnline {
                 resumeBanner
             }
             if case .failed(let error) = engine.state {
@@ -36,7 +41,7 @@ struct AgentChatView: View {
                     .padding(.top, 8)
             }
             if !connectivity.isOnline {
-                OfflineHelpBanner(suggestions: catalog.offlineSuggestions(for: engine.lead.message))
+                offlineNotice
             }
 
             TranscriptView(messages: engine.transcript, state: engine.state)
@@ -45,7 +50,28 @@ struct AgentChatView: View {
         }
         .navigationTitle(engine.lead.customerName)
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear { engine.startIfNeeded() }
+        .onAppear {
+            if connectivity.isOnline {
+                engine.startIfNeeded()
+            } else {
+                engine.startOfflineIfNeeded()
+            }
+        }
+    }
+
+    private var offlineNotice: some View {
+        Label(
+            String(
+                localized: "offline_chat_notice",
+                defaultValue: "You're offline. Ask here for instant shop guides — the AI assistant follows up once you're back online."
+            ),
+            systemImage: "wifi.slash"
+        )
+        .font(.footnote)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 8)
+        .padding(.horizontal, 16)
+        .background(.gray.opacity(0.15))
     }
 
     private var resumeBanner: some View {
@@ -90,7 +116,7 @@ struct AgentChatView: View {
                     Image(systemName: "arrow.up.circle.fill")
                         .font(.title2)
                 }
-                .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty || !connectivity.isOnline)
+                .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
                 .accessibilityLabel(String(localized: "send_button", defaultValue: "Send"))
             }
         }
@@ -107,7 +133,8 @@ struct AgentChatView: View {
     private func sendDraft() {
         // Clear the draft only if the engine accepted it — a keyboard-return
         // send while the agent is running must not silently drop the text.
-        if engine.send(draft) {
+        let accepted = connectivity.isOnline ? engine.send(draft) : engine.sendWhileOffline(draft)
+        if accepted {
             draft = ""
         }
     }
@@ -159,6 +186,25 @@ struct MessageBubble: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .center)
+        case .offlineHelp:
+            // Visibly NOT the AI worker: labeled, distinct styling. The
+            // responder is a local guide lookup, and the UI must say so.
+            VStack(alignment: .leading, spacing: 6) {
+                Label(
+                    String(localized: "offline_help_label", defaultValue: "Offline help"),
+                    systemImage: "wifi.slash"
+                )
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+                Text(message.text)
+            }
+            .padding(12)
+            .background(.gray.opacity(0.12), in: RoundedRectangle(cornerRadius: 14))
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .strokeBorder(.gray.opacity(0.35), style: StrokeStyle(lineWidth: 1, dash: [5]))
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }

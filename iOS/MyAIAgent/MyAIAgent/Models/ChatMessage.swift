@@ -15,6 +15,10 @@ nonisolated struct ChatMessage: Identifiable, Equatable, Codable {
         case agent
         /// A note about a tool the agent ran ("Booked appointment #A-1042").
         case toolActivity
+        /// A deterministic local reply while offline (guide lookup). Clearly
+        /// labeled in the UI — never presented as the AI worker, and never
+        /// written into the wire conversation as an assistant message.
+        case offlineHelp
     }
 
     let id: UUID
