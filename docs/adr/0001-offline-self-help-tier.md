@@ -3,7 +3,7 @@
 - **Status:** Proposed
 - **Date:** 2026-07-28
 - **Deciders:** Larry Bulen
-- **Feature request:** see the *Self-Help Library* issue in this repo's tracker
+- **Feature request:** [#6 — Self-Help Library: offline article tier with online agent grounding](https://github.com/lbulendev/MyAIAgent/issues/6)
 
 ## Context
 
