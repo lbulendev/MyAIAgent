@@ -753,6 +753,40 @@
         }
       }
     },
+    "offline_help_guides_header": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guides available offline:"
+          }
+        },
+        "en-CA": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Guides available offline:"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Guides available offline:"
+          }
+        },
+        "es-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guías disponibles sin conexión:"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guides disponibles hors ligne :"
+          }
+        }
+      }
+    },
     "offline_help_label": {
       "localizations": {
         "en": {

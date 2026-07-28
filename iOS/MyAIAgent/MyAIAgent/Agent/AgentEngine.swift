@@ -118,10 +118,23 @@ final class AgentEngine {
                 .joined(separator: "\n")
             reply = "\(article.title)\n\(steps)"
         } else {
-            reply = String(
+            // No topical match: list what IS available, so asking "what
+            // guides do you have?" never dead-ends (data-driven, like the
+            // service menu).
+            var lines = [String(
                 localized: "offline_help_no_match",
                 defaultValue: "No offline guide covers that. Your message is saved — the AI assistant will pick it up when you're back online."
-            )
+            )]
+            let titles = catalog.articles.filter { $0.requirement == .none }.map { "• \($0.title)" }
+            if !titles.isEmpty {
+                lines.append("")
+                lines.append(String(
+                    localized: "offline_help_guides_header",
+                    defaultValue: "Guides available offline:"
+                ))
+                lines.append(contentsOf: titles)
+            }
+            reply = lines.joined(separator: "\n")
         }
         transcript.append(ChatMessage(kind: .offlineHelp, text: reply))
         canResume = true

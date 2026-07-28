@@ -40,6 +40,36 @@ final class ConnectivityMonitor: ConnectivityMonitoring {
                 if self.isOnline != online { self.isOnline = online }
             }
         }
+
+        // Reconnect watchdog: a long-lived NWPathMonitor does not always
+        // deliver the satisfied update when the network returns (the
+        // simulator drops it routinely), but a FRESH monitor's initial
+        // path report is reliable everywhere. Probe with one while offline
+        // so the app can never get stuck in offline mode.
+        Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(3))
+                guard let self else { return }
+                if !self.isOnline, await Self.freshMonitorReportsSatisfied() {
+                    self.isOnline = true
+                }
+            }
+        }
+    }
+
+    /// Spins up a throwaway NWPathMonitor and returns its initial path
+    /// verdict — the reliable way to ask "are we online right now?".
+    private static func freshMonitorReportsSatisfied() async -> Bool {
+        let firstPath = AsyncStream<Bool> { continuation in
+            let monitor = NWPathMonitor()
+            monitor.pathUpdateHandler = { @Sendable path in
+                continuation.yield(path.status == .satisfied)
+            }
+            continuation.onTermination = { _ in monitor.cancel() }
+            monitor.start(queue: DispatchQueue(label: "connectivity-probe"))
+        }
+        var iterator = firstPath.makeAsyncIterator()
+        return await iterator.next() ?? false
     }
 }
 

@@ -84,6 +84,12 @@ cd android && JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/
 
 ## iOS-specific
 
+- SIMULATOR QUIRK: a long-lived NWPathMonitor often never delivers the
+  `satisfied` update after the network returns (offline sticks forever).
+  A FRESH monitor's initial path report is reliable — ConnectivityMonitor
+  runs a probe watchdog while offline for exactly this reason. Expect an
+  analogous reconnect-detection check on the Android mirror.
+
 - Modern pbxproj with synchronized folder groups; `SWIFT_DEFAULT_ACTOR_ISOLATION
   = MainActor` — pure value types AND THEIR EXTENSIONS must be explicitly
   `nonisolated` (an extension does not inherit the type's nonisolation).

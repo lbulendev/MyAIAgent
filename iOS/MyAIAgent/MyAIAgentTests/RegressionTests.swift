@@ -309,15 +309,17 @@ struct RegressionTests {
             #expect(engine.transcript.last?.text.contains("Fix a flat tire") == true)
         }
 
-        @Test("No matching guide gets the honest no-match reply, never silence or a fake answer")
-        func noMatchIsHonest() {
+        @Test("No matching guide gets the honest no-match reply plus the list of available guides — asking 'what guides do you have?' never dead-ends")
+        func noMatchIsHonest() throws {
             let provider = FakeModelProvider(script: [])
             let (engine, _, _) = makeEngine(provider: provider)
 
             engine.sendWhileOffline("xylophone lessons")
 
-            #expect(engine.transcript.last?.kind == .offlineHelp)
-            #expect(engine.transcript.last?.text.contains("No offline guide") == true)
+            let reply = try #require(engine.transcript.last)
+            #expect(reply.kind == .offlineHelp)
+            #expect(reply.text.contains("No offline guide"))
+            #expect(reply.text.contains("• Fix a flat tire"))
         }
     }
 
