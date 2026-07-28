@@ -289,6 +289,26 @@ struct RegressionTests {
             })
         }
 
+        @Test("A run cancelled by a connectivity drop hands off to the offline responder — the chat must never freeze on a dead stream")
+        func cancelledRunHandsOffToResponder() async throws {
+            let provider = FakeModelProvider(script: [.hang])
+            let (engine, _, _) = makeEngine(provider: provider)
+
+            engine.startIfNeeded()
+            try await waitUntil {
+                if case .thinking = engine.state { return true }
+                return false
+            }
+
+            // What the view does when isOnline flips to false mid-run.
+            engine.cancel()
+            try await waitUntil { engine.state == .idle }
+
+            #expect(engine.sendWhileOffline("how do I fix a flat tire?"))
+            #expect(engine.transcript.last?.kind == .offlineHelp)
+            #expect(engine.transcript.last?.text.contains("Fix a flat tire") == true)
+        }
+
         @Test("No matching guide gets the honest no-match reply, never silence or a fake answer")
         func noMatchIsHonest() {
             let provider = FakeModelProvider(script: [])

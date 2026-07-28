@@ -28,7 +28,7 @@ final class ConnectivityMonitor: ConnectivityMonitoring {
         // crosses the boundary.
         let updates = AsyncStream<Bool> { continuation in
             let monitor = NWPathMonitor()
-            monitor.pathUpdateHandler = { path in
+            monitor.pathUpdateHandler = { @Sendable path in
                 continuation.yield(path.status == .satisfied)
             }
             continuation.onTermination = { _ in monitor.cancel() }

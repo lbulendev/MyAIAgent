@@ -57,6 +57,12 @@ struct AgentChatView: View {
                 engine.startOfflineIfNeeded()
             }
         }
+        .onChange(of: connectivity.isOnline) { _, online in
+            // Losing the network mid-run must not leave the user watching a
+            // dead stream: cancel now (which records a resumable snapshot)
+            // so the offline responder can take over the conversation.
+            if !online { engine.cancel() }
+        }
     }
 
     private var offlineNotice: some View {
