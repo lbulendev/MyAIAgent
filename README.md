@@ -39,7 +39,7 @@ every agentic mechanic implemented natively on the client.
   (decisions recorded in ADR 0001)
 - **Testability by design** — a `ModelProvider` seam at the network
   boundary means the whole agent loop is unit-tested with a scripted fake,
-  tagged `smoke` / `sanity` / `regression`, no network required — 41 tests
+  tagged `smoke` / `sanity` / `regression`, no network required — 46 tests
   on iOS (Swift Testing), 29 on Android (JUnit 5); the core agent suites
   mirror test-for-test, and the self-help tier's Android mirror is next
 - **Dual-native discipline** — the same feature shipped twice, natively:
